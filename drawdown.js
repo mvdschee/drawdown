@@ -17,6 +17,7 @@
     var rx_highlight = /(^|[^A-Za-z\d\\])(([*_])|(~)|(\^)|(--)|(\+\+)|`)(\2?)([^<]*?)\2\8(?!\2)(?=\W|_|$)/g;
     var rx_code = /\n((```|~~~).*\n?([^]*?)\n?\2|((    .*?\n)+))/g;
     var rx_link = /((!?)\[(.*?)\]\((.*?)( ".*")?\)|\\([\\`*_{}\[\]()#+\-.!~]))/g;
+    var rx_fuzzy_link = /((http.*)|(www\..*))/g;
     var rx_table = /\n(( *\|.*?\| *\n)+)/g;
     var rx_thead = /^.*\n( *\|( *\:?-+\:?-+\:? *\|)* *\n|)/;
     var rx_row = /.*\n/g;
@@ -101,6 +102,12 @@
                 ? '<img src="' + p4 + '" alt="' + p3 + '"/>'
                 : '<a href="' + p4 + '">' + unesc(highlight(p3)) + '</a>'
             : p6;
+        return si + '\uf8ff';
+    });
+
+    // fuzzy links
+    replace(rx_fuzzy_link, function(all, p1, p2, p3) {
+        stash[--si] = p2 ? '<a href="' + p2 + '">' + unesc(highlight(p2)) + '</a>' : '<a href="https://' + p3 + '">' + unesc(highlight(p3)) + '</a>';
         return si + '\uf8ff';
     });
 
